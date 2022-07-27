@@ -1,0 +1,29 @@
+name: elred
+description: A task manager app created for elRed for screening.
+
+publish_to: 'none' 
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  get_it: ^7.2.0
+  dartz: ^0.10.1
+  equatable: ^2.0.3
+  cloud_firestore: ^3.4.1
+  google_sign_in: ^5.4.0
+
+  json_annotation: ^4.6.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  json_serializable: ^6.3.1
+  build_runner: ^2.2.0
+flutter:
+
+  uses-material-design: true
