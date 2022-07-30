@@ -21,8 +21,11 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<Either<AppError, dynamic>> register(Map<String, String> authParams) {
-    // TODO: implement register
-    throw UnimplementedError();
+  Future<Either<AppError, dynamic>> getCurrentUser() async {
+    final response = await _firebaseRemoteDataSouce.getCurrentUser();
+    if (response != null) {
+      return right(response);
+    }
+    return left(response);
   }
 }

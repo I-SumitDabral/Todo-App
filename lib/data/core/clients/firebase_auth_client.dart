@@ -7,7 +7,11 @@ class FirebaseAuthClient {
 
   Future<dynamic> attemptLogin(AuthCredential userCredential) async {
     final response = await _firebaseAuth.signInWithCredential(userCredential);
-    print(response);
     return response;
+  }
+
+  Future<dynamic> getLoggedInUser() async {
+    final user = _firebaseAuth.currentUser;
+    return user;
   }
 }

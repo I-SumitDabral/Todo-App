@@ -5,10 +5,12 @@ import 'package:elred/data/core/clients/social_auth_client.dart';
 import 'package:elred/data/dataSource/remote_data_source.dart';
 import 'package:elred/data/repositories/auth_repository_impl.dart';
 import 'package:elred/di/modules/injectable_modules.dart';
+import 'package:elred/domain/entities/usecases/current_user_usecase.dart';
 import 'package:elred/domain/entities/usecases/login_usescase.dart';
 import 'package:elred/domain/repositories/auth_repository.dart';
 import 'package:elred/presentation/loading/loading_viewmodel.dart';
 import 'package:elred/presentation/login/login_viewmodel.dart';
+import 'package:elred/presentation/splash/splash_viewmodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
@@ -24,16 +26,20 @@ Future init() async {
 
   getItInstance
       .registerLazySingleton<GoogleSignIn>(() => injecableModules.googleSignIn);
-  getItInstance.registerLazySingleton<FirebaseFirestore>(
-      () => injecableModules.firebaseFireStore);
   getItInstance
       .registerLazySingleton<FirebaseAuth>(() => injecableModules.firebaseAuth);
+  getItInstance.registerLazySingleton<FirebaseFirestore>(
+      () => injecableModules.firebaseFireStore);
   getItInstance
       .registerLazySingleton<LoadingViewModel>(() => LoadingViewModel());
   getItInstance.registerLazySingleton<LoginViewModel>(
       () => LoginViewModel(getItInstance()));
+  getItInstance.registerLazySingleton<SplashViewModel>(
+      () => SplashViewModel(getItInstance()));
   getItInstance
       .registerLazySingleton<LoginUseCase>(() => LoginUseCase(getItInstance()));
+  getItInstance.registerLazySingleton<CurrentUserUseCase>(
+      () => CurrentUserUseCase(getItInstance()));
   getItInstance.registerLazySingleton<AuthenticationRepository>(
       () => AuthenticationRepositoryImpl(getItInstance()));
   getItInstance.registerLazySingleton<FirebaseRemoteDataSouce>(() =>

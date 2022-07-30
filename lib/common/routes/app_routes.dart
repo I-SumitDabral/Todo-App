@@ -3,4 +3,5 @@ class AppRoutes {
   static const startUpRoute = '/';
   static const addNewTodoRoute = '/addNewTodoRoute';
   static const loginRoute = '/loginRoute';
+  static const homeRoute = '/homeRoute';
 }

@@ -10,6 +10,7 @@ abstract class FirebaseRemoteDataSouce {
   Future<dynamic> initaiteLoginWithGoogle();
   Future<dynamic> login(AuthCredential creds);
   Future<dynamic> createOrdUpdateUser(Map user);
+  Future<dynamic> getCurrentUser();
 }
 
 class FirebaseRemoteDataSouceImpl implements FirebaseRemoteDataSouce {
@@ -40,5 +41,11 @@ class FirebaseRemoteDataSouceImpl implements FirebaseRemoteDataSouce {
   Future createOrdUpdateUser(Map<dynamic, dynamic> user) async {
     final response = await _firebaseClient.post(
         json.encode(user) as Map<String, String>, user['user']['uid']);
+  }
+
+  @override
+  Future getCurrentUser() async {
+    final response = await _firebaseAuthClient.getLoggedInUser();
+    return response;
   }
 }

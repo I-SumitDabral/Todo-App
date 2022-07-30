@@ -7,6 +7,7 @@ import 'package:elred/presentation/login/login_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:elred/presentation/splash/splash_viewmodel.dart';
 
 import 'presentation/loading/loading_viewmodel.dart';
 
@@ -33,14 +34,30 @@ class _TodoAppState extends State<TodoApp> {
           ChangeNotifierProvider(
               create: (BuildContext context) =>
                   getItInstance<LoginViewModel>()),
+          ChangeNotifierProvider(
+              create: (BuildContext context) =>
+                  getItInstance<SplashViewModel>()),
         ],
         child: MaterialApp(
           navigatorKey: _navigatorKey,
           debugShowCheckedModeBanner: false,
           initialRoute: AppRoutes.startUpRoute,
+          
+          theme: ThemeData(
+           
+              useMaterial3: true,
+              scaffoldBackgroundColor: Colors.white,
+              
+              fontFamily: 'Nunito'),
           builder: (context, child) {
-            return Stack(
-              children: [const LoadingView(), child ?? const SizedBox.shrink()],
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+              child: Stack(
+                children: [
+                  const LoadingView(),
+                  child ?? const SizedBox.shrink()
+                ],
+              ),
             );
           },
           onGenerateRoute: (RouteSettings settings) {
