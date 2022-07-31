@@ -1,8 +1,10 @@
 import 'package:elred/common/config/app_images.dart';
+import 'package:elred/common/routes/app_routes.dart';
 import 'package:elred/presentation/home/widgets/bottom_layer_widget.dart';
 import 'package:elred/presentation/home/widgets/custom_sliver.dart';
 import 'package:elred/presentation/home/widgets/top_layer_widget.dart';
 import 'package:elred/presentation/widgets/text_widget.dart';
+import 'package:elred/common/extensions/navigation_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -44,9 +46,20 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
+      floatingActionButton: InkWell(
+        onTap: () {
+          context.push(AppRoutes.addNewTodoRoute);
+        },
+        child: Container(
+          height: 70.h,
+          width: 70.h,
+          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 40.sp,
+          ),
+        ),
       ),
       body: CustomScrollView(
         // controller: _scrollController,
@@ -84,13 +97,33 @@ class _HomeViewState extends State<HomeView> {
             ),
             expandedHeight: 0.33.sh,
           ),
+          SliverFillRemaining(
+            child: Container(
+              height: 300,
+              color: Colors.red,
+            ),
+          ),
+          SliverAppBar(
+            pinned: true,
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.blue,
+          ),
           SliverList(delegate: SliverChildBuilderDelegate(
             (context, index) {
               return BottomLayerWidget();
             },
-          ))
-
-          // BottomLayerWidget(),
+          )),
+          SliverAppBar(
+            pinned: true,
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.blue,
+            title: Text("tomorrow"),
+          ),
+          SliverList(delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return BottomLayerWidget();
+            },
+          )),
         ],
       ),
     );

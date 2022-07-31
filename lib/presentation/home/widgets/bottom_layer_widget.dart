@@ -2,6 +2,7 @@ import 'package:elred/presentation/home/widgets/custom_sliver.dart';
 import 'package:elred/presentation/home/widgets/todo_tile.dart';
 import 'package:elred/presentation/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
@@ -15,7 +16,7 @@ class BottomLayerWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TvText("Current Todos"),
+         
           TodoTileWidget(),
           TodoTileWidget(),
           TodoTileWidget(),
