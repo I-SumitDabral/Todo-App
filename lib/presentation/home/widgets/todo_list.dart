@@ -1,20 +1,19 @@
-import 'package:elred/presentation/home/home_viewmodel.dart';
+import 'package:elred/domain/entities/todo/todo.dart';
+import 'package:elred/presentation/home/widgets/todo_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:provider/provider.dart';
 
 class TodoListWidget extends StatelessWidget {
-  const TodoListWidget({Key? key}) : super(key: key);
+  final List<Todo> todoList;
+  const TodoListWidget({Key? key, required this.todoList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeViewModel>(builder: (_, notifier, __) {
-      return Container();
-      // if (notifier.notifierState == NotifierState.loading) {
-      //   return const CircularProgressIndicator();
-      // }
-    });
+    return ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: todoList.length,
+        itemBuilder: ((context, index) =>
+            TodoTileWidget(todo: todoList[index])));
   }
 }

@@ -1,56 +1,40 @@
 import 'dart:ui';
 
 import 'package:elred/common/config/app_images.dart';
-import 'package:elred/presentation/widgets/helpers_widget.dart';
+import 'package:elred/presentation/home/home_viewmodel.dart';
 import 'package:elred/presentation/widgets/text_widget.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:elred/common/extensions/date_extensions.dart';
 
 class ToplayerWidget extends StatelessWidget with PreferredSizeWidget {
-  const ToplayerWidget({Key? key}) : super(key: key);
+  final TodoDone? todoDone;
+  const ToplayerWidget({Key? key, required this.todoDone}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return
-
-        // Stack(
-        //   children: [
-        //     Container(
-        //       height: 0.35.sh,
-        //       decoration: const BoxDecoration(
-        //           color: Colors.blue,
-        //           image: DecorationImage(
-        //               image: AssetImage(
-        //             AppImages.hills,
-        //           ))),
-        //     ),
-        //     Container(
-        //       height: 0.35.sh,
-        //       color: Colors.blue.shade100,
-        //     )
-        //   ],
-        // );
-        Container(
+    if (todoDone == null) {
+      return const SizedBox.shrink();
+    }
+    return SizedBox(
       height: 0.35.sh,
       child: Stack(
         children: <Widget>[
           ConstrainedBox(
+            constraints: const BoxConstraints.expand(),
             child: Image.asset(
               AppImages.hills,
               fit: BoxFit.cover,
             ),
-            constraints: BoxConstraints.expand(),
           ),
           Row(
             children: [
               Expanded(
+                flex: (todoDone!.percentageDone).round(),
                 child: Stack(
                   alignment: Alignment.bottomCenter,
                   children: [
-                    Container(
+                    SizedBox(
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 1, sigmaY: 0),
                         child: Container(
@@ -67,7 +51,8 @@ class ToplayerWidget extends StatelessWidget with PreferredSizeWidget {
                 ),
               ),
               Expanded(
-                child: Container(
+                flex: 100 - (todoDone!.percentageDone).round(),
+                child: SizedBox(
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 1, sigmaY: 0),
                     child: Container(
@@ -83,7 +68,7 @@ class ToplayerWidget extends StatelessWidget with PreferredSizeWidget {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                Expanded(
+              const   Expanded(
                   flex: 2,
                   child: SizedBox(
                     // height: 0.08.sh,
@@ -92,7 +77,7 @@ class ToplayerWidget extends StatelessWidget with PreferredSizeWidget {
                 ),
                 Expanded(
                   flex: 3,
-                  child: Container(
+                  child: SizedBox(
                     // color: Colors.blueGrey,
                     // height: 0.15.sh,
                     width: double.infinity,
@@ -122,13 +107,13 @@ class ToplayerWidget extends StatelessWidget with PreferredSizeWidget {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       TvText(
-                                        "25",
+                                        todoDone!.totalDone.toString(),
                                         isHeading: true,
                                         color: Colors.white,
                                         fontSize: 25.sp,
                                       ),
                                       TvText(
-                                        "Personal",
+                                        "Total Done",
                                         isHeading: true,
                                         color: Colors.white.withOpacity(0.6),
                                         fontSize: 15.sp,
@@ -140,13 +125,13 @@ class ToplayerWidget extends StatelessWidget with PreferredSizeWidget {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       TvText(
-                                        "15",
+                                        todoDone!.total.toString(),
                                         isHeading: true,
                                         color: Colors.white,
                                         fontSize: 25.sp,
                                       ),
                                       TvText(
-                                        "Business",
+                                        "Total",
                                         isHeading: true,
                                         color: Colors.white.withOpacity(0.6),
                                         fontSize: 15.sp,
@@ -182,15 +167,15 @@ class ToplayerWidget extends StatelessWidget with PreferredSizeWidget {
                                 height: 20,
                                 width: 20,
                                 child: CircularProgressIndicator(
-                                  value: 0.6,
+                                  value: todoDone!.percentageDone / 100,
                                   strokeWidth: 2,
                                   backgroundColor: Colors.blue.shade100,
                                   valueColor:
-                                      AlwaysStoppedAnimation(Colors.blue),
+                                      const AlwaysStoppedAnimation(Colors.blue),
                                 ),
                               ),
                               TvText(
-                                "65% done",
+                                "${todoDone!.percentageDone}% done",
                                 color: Colors.white54,
                               )
                             ],
@@ -209,6 +194,5 @@ class ToplayerWidget extends StatelessWidget with PreferredSizeWidget {
   }
 
   @override
-  // TODO: implement preferredSize
   Size get preferredSize => Size(1.sw, 0.35.sh);
 }

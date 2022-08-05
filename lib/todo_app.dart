@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:elred/presentation/splash/splash_viewmodel.dart';
 
+import 'presentation/addNewTodo/add_new_todo_viewmodel.dart';
 import 'presentation/loading/loading_viewmodel.dart';
 
 class TodoApp extends StatefulWidget {
@@ -34,28 +35,29 @@ class _TodoAppState extends State<TodoApp> {
           ChangeNotifierProvider(
               create: (BuildContext context) =>
                   getItInstance<LoginViewModel>()),
+         
           ChangeNotifierProvider(
               create: (BuildContext context) =>
                   getItInstance<SplashViewModel>()),
+          ChangeNotifierProvider(
+              create: (BuildContext context) =>
+                  getItInstance<AddNewTodoViewModel>()),
         ],
         child: MaterialApp(
           navigatorKey: _navigatorKey,
           debugShowCheckedModeBanner: false,
           initialRoute: AppRoutes.startUpRoute,
-          
           theme: ThemeData(
-           
               useMaterial3: true,
               scaffoldBackgroundColor: Colors.white,
-              
               fontFamily: 'Nunito'),
           builder: (context, child) {
             return MediaQuery(
               data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
               child: Stack(
                 children: [
+                  child ?? const SizedBox.shrink(),
                   const LoadingView(),
-                  child ?? const SizedBox.shrink()
                 ],
               ),
             );

@@ -34,19 +34,19 @@ class TvText extends StatelessWidget {
   }
 
   TextStyle? _getTheme(BuildContext context) {
-    final _theme = Theme.of(context).textTheme;
-    late final TextStyle? _newTheme;
+    final theme = Theme.of(context).textTheme;
+    late final TextStyle? newTheme;
     if (isBody) {
-      _newTheme = _theme.bodyText2;
+      newTheme = theme.bodyText2;
     } else if (isHeading) {
-      _newTheme = _theme.headline6!.copyWith(
+      newTheme = theme.headline6!.copyWith(
         fontWeight: FontWeight.w500,
         fontSize: 16,
       );
     } else {
-      _newTheme = _theme.button;
+      newTheme = theme.button;
     }
-    return _newTheme!.copyWith(
+    return newTheme!.copyWith(
       backgroundColor: bgColor,
       color: color,
       fontSize: fontSize,

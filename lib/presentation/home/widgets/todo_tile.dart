@@ -1,13 +1,16 @@
+import 'package:elred/common/extensions/string_extensions.dart';
+import 'package:elred/common/extensions/date_extensions.dart';
+import 'package:elred/domain/entities/todo/todo.dart';
+import 'package:elred/presentation/home/widgets/image_icon_widget.dart';
+import 'package:elred/presentation/widgets/alert.dart';
 import 'package:elred/presentation/widgets/horizontal_spacer_widget.dart';
 import 'package:elred/presentation/widgets/text_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TodoTileWidget extends StatelessWidget {
-  const TodoTileWidget({Key? key}) : super(key: key);
+  final Todo todo;
+  const TodoTileWidget({Key? key, required this.todo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,31 +18,24 @@ class TodoTileWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         ListTile(
-          // height: 0.1.sh,
-          // color: Colors.blue,
-          leading: Container(
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(width: 2.0, color: Colors.grey)),
-            height: 60.h,
-            width: 60.w,
-          ),
+          onTap: () => ShowAlert().showBottomSheet(context, todo),
+          leading: const ImageIconWidget(),
           title: TvText(
-            "This is my title",
+            todo.todoTitle.intelliTrimOfTitle,
             alignment: TextAlign.left,
             isHeading: true,
-            fontSize: 20.sp,
+            fontSize: 17.sp,
             color: Colors.black54,
           ),
           subtitle: TvText(
-            "this is my response",
+            todo.todoDescription.intelliTrimOfSubTitle,
             alignment: TextAlign.left,
             fontSize: 15.sp,
             color: Colors.grey.shade400,
           ),
-          trailing: TvText("9am"),
+          trailing: TvText(todo.todoDate?.intToDateString ?? ''),
         ),
-        HorizontalSpacerWidget()
+        const HorizontalSpacerWidget()
       ],
     );
   }

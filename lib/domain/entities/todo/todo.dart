@@ -1,0 +1,21 @@
+// ignore_for_file: depend_on_referenced_packages
+
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'todo.freezed.dart';
+part 'todo.g.dart';
+
+@freezed
+abstract class Todo implements _$Todo {
+  const Todo._();
+
+  const factory Todo({
+    required String todoID,
+    required String todoTitle,
+    required String todoDescription,
+    required int? todoDate,
+    @Default(false) bool isCompleted,
+  }) = _Todo;
+
+  factory Todo.fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
+}

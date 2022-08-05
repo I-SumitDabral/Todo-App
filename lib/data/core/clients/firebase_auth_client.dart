@@ -11,7 +11,11 @@ class FirebaseAuthClient {
   }
 
   Future<dynamic> getLoggedInUser() async {
-    final user = _firebaseAuth.currentUser;
-    return user;
+    final userID = _firebaseAuth.currentUser?.uid;
+    return userID;
+  }
+
+  Future<void> logout() async {
+    await _firebaseAuth.signOut();
   }
 }

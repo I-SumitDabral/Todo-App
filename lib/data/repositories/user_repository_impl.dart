@@ -5,7 +5,7 @@ import 'package:elred/domain/repositories/user_repository.dart';
 class UserRepositoryImpl implements UserRepository{
   @override
   Future<Either<AppError, dynamic>> createOrUpdateUser(Map<String, dynamic> params) {
-    // TODO: implement createNewUser
+    // TODO: implement createOrUpdateUser
     throw UnimplementedError();
   }
 

@@ -6,22 +6,28 @@ class FirebaseClient {
 
   FirebaseClient({required this.firebaseFirestore});
 
-  Future<dynamic> get(String path, String iD) async {
-    final value =
-        firebaseFirestore.collection(path).doc(iD).withConverter<dynamic>(
-              fromFirestore: (snapshot, _) => snapshot,
-              // FireBaseFavParams.fromJson(snapshot.data()!),
-              toFirestore: (data, _) => data.toJson(),
-            );
-    final response = value.get().then((snapshot) => snapshot.data());
-    return response;
+  Stream<QuerySnapshot<Map<String, dynamic>>> get(
+    String path,
+  ) async* {
+    final collection = firebaseFirestore.collection(path);
+    yield* collection.snapshots();
   }
 
-  Future<Unit> post(Map<String, String> params, String userID) async {
+  Future<Unit> post(
+      Map<String, dynamic> params, String todoID, String userID) async {
+    await firebaseFirestore.collection(userID).doc(todoID).set(params);
     return unit;
   }
 
-  Future<Unit> delete(String userID, String todoID) async {
+  Future<Unit> update(
+      Map<String, dynamic> params, String todoID, String userID) async {
+    await firebaseFirestore.collection(userID).doc(todoID).update(params);
+    return unit;
+  }
+
+  Future<Unit> delete(
+       String todoID, String userID) async {
+    await firebaseFirestore.collection(userID).doc(todoID).delete();
     return unit;
   }
 }

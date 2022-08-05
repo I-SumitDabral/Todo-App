@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HorizontalSpacerWidget extends StatelessWidget {
   const HorizontalSpacerWidget({Key? key}) : super(key: key);
@@ -10,7 +8,7 @@ class HorizontalSpacerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 1,
-      width: double.infinity,
+      width: 0.85.sw,
       color: Colors.grey.shade300,
     );
   }

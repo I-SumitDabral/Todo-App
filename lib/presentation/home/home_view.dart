@@ -1,131 +1,89 @@
-import 'package:elred/common/config/app_images.dart';
-import 'package:elred/common/routes/app_routes.dart';
-import 'package:elred/presentation/home/widgets/bottom_layer_widget.dart';
-import 'package:elred/presentation/home/widgets/custom_sliver.dart';
-import 'package:elred/presentation/home/widgets/top_layer_widget.dart';
-import 'package:elred/presentation/widgets/text_widget.dart';
-import 'package:elred/common/extensions/navigation_extensions.dart';
+import 'package:dartz/dartz.dart' as d;
+import 'package:elred/di/get_it.dart';
+import 'package:elred/domain/entities/app_error.dart';
+import 'package:elred/domain/entities/todo/todo.dart';
+import 'package:elred/presentation/home/home_viewmodel.dart';
+import 'package:elred/presentation/home/widgets/custom_fb_button.dart';
+import 'package:elred/presentation/home/widgets/drawer_widget.dart';
+import 'package:elred/presentation/home/widgets/fetched_data_body.dart';
+import 'package:elred/presentation/home/widgets/loading_body.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
-class HomeView extends StatefulWidget {
+class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (BuildContext context) => getItInstance<HomeViewModel>()),
+        StreamProvider<d.Either<AppError, List<Todo>>>.value(
+          value: getItInstance<HomeViewModel>().userStream,
+          initialData: d.right([]),
+        )
+      ],
+      child: const HomeViewBody(),
+    );
+  }
 }
 
-class _HomeViewState extends State<HomeView> {
-  late ScrollController _scrollController;
+class HomeViewBody extends StatefulWidget {
+  const HomeViewBody({Key? key}) : super(key: key);
 
   @override
-  void initState() {
-    _scrollController = ScrollController(initialScrollOffset: 1.0)
-      ..addListener(_scrollListener);
-    super.initState();
-  }
+  State<HomeViewBody> createState() => _HomeViewBodyState();
+}
 
-  void _scrollListener() {
-    // if (_scrollController.offset >=
-    //         _scrollController.position.maxScrollExtent &&
-    //     !_scrollController.position.outOfRange) {
-    //   // _venuesCubit.fetchAllVenues(
-    //   //   "0",
-    //   //   _categoryid,
-    //   // );
-    // }
+class _HomeViewBodyState extends State<HomeViewBody> {
+  late HomeViewModel _homeViewModel;
+  @override
+  void initState() {
+    _homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
+    _homeViewModel.fetchTodoList();
+    super.initState();
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _homeViewModel.dispose();
 
     super.dispose();
   }
 
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: InkWell(
-        onTap: () {
-          context.push(AppRoutes.addNewTodoRoute);
-        },
-        child: Container(
-          height: 70.h,
-          width: 70.h,
-          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 40.sp,
-          ),
+        key: _key,
+        drawer: DrawerWidget(
+          onLogoutButtonPressed: () => _homeViewModel.logout(context),
         ),
-      ),
-      body: CustomScrollView(
-        // controller: _scrollController,
-        shrinkWrap: true,
-        slivers: [
-          // SliverPersistentHeader(
-          //     pinned: true,
-          //     delegate: CustomSliverDelegate(
-          //       maxHeight: 0.33.sh,
-          //       child: ToplayerWidget(),
-          //     )),
-          SliverAppBar(
-            automaticallyImplyLeading: false,
-            title: Row(
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: InkWell(
-                    onTap: () {},
-                    child: Image.asset(
-                      AppImages.drawer,
-                      color: Colors.white,
-                      height: 30,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            snap: false,
-            pinned: true,
-            floating: false,
-            flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
-              background: ToplayerWidget(),
-            ),
-            expandedHeight: 0.33.sh,
-          ),
-          SliverFillRemaining(
-            child: Container(
-              height: 300,
-              color: Colors.red,
-            ),
-          ),
-          SliverAppBar(
-            pinned: true,
-            automaticallyImplyLeading: false,
-            backgroundColor: Colors.blue,
-          ),
-          SliverList(delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              return BottomLayerWidget();
-            },
-          )),
-          SliverAppBar(
-            pinned: true,
-            automaticallyImplyLeading: false,
-            backgroundColor: Colors.blue,
-            title: Text("tomorrow"),
-          ),
-          SliverList(delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              return BottomLayerWidget();
-            },
-          )),
-        ],
-      ),
-    );
+        floatingActionButton: const CustomFbButton(),
+        body: StreamBuilder(
+            stream: _homeViewModel.userStream,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const LoadingBody();
+              }
+              if (snapshot.connectionState == ConnectionState.active ||
+                  snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return const Text('Error');
+                } else if (snapshot.hasData) {
+                  final List<Todo> rightData = _homeViewModel
+                      .getTodo(snapshot.data as d.Either<AppError, List<Todo>>);
+                  TodoDone? todo = _homeViewModel.todoDoneData(rightData);
+                  return FetchedDataBody(
+                      scaffoldKey: _key,
+                      todoList: rightData
+                          .where((element) => element.isCompleted == false)
+                          .toList(),
+                      todoDone: todo);
+                }
+              }
+              return const LoadingBody();
+            }));
   }
 }

@@ -26,12 +26,10 @@ class VideoState extends State<Splash> with SingleTickerProviderStateMixin {
 
   void navigationPage() {
     checkIfUserLoggedIn();
-    // Navigator.of(context).push(
-    //     MaterialPageRoute(builder: (context) => Dialogs()));
   }
 
   void _navigator(String route) {
-    context.push(route);
+    context.pushRemoveUntil(route);
     return;
   }
 
@@ -39,8 +37,9 @@ class VideoState extends State<Splash> with SingleTickerProviderStateMixin {
     final response = await _splashViewModel.currentUser;
     if (response == null) {
       _navigator(AppRoutes.loginRoute);
+    } else {
+      _navigator(AppRoutes.homeRoute);
     }
-    _navigator(AppRoutes.homeRoute);
   }
 
   @override
